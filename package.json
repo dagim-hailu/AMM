@@ -1,0 +1,20 @@
+{
+  "name": "amm-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "turbo": "latest"
+  },
+  "packageManager": "npm@10.9.4"
+}

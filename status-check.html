@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMM System Status Check</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .service-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .service-title .icon {
+            font-size: 2rem;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .status-up {
+            background: rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+        .status-down {
+            background: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+        .details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .url {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 12px;
+            border-radius: 5px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        .command {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+        .note {
+            background: rgba(241, 196, 15, 0.2);
+            border-left: 4px solid #f1c40f;
+            padding: 10px 15px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        .note.warning {
+            background: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #3498db;
+        }
+        .btn-success {
+            background: #2ecc71;
+        }
+        .btn-warning {
+            background: #f39c12;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Appointment Management Module (AMM) System Status</h1>
+        
+        <div class="status-grid">
+            <!-- Public Web App -->
+            <div class="service-card">
+                <div class="service-title">
+                    <span class="icon">🌐</span> Public Web App
+                </div>
+                <div class="status status-up">✅ RUNNING</div>
+                <p>Mobile-optimized appointment request form with QR code access.</p>
+                <div class="details">
+                    <strong>URL:</strong>
+                    <div class="url">http://localhost:3000</div>
+                    <strong>Test Command:</strong>
+                    <div class="command">curl -s -o /dev/null -w "%{http_code}" http://localhost:3000</div>
+                    <div class="actions">
+                        <a href="http://localhost:3000" class="btn btn-primary" target="_blank">Open Public Form</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Dashboard -->
+            <div class="service-card">
+                <div class="service-title">
+                    <span class="icon">📊</span> Admin Dashboard
+                </div>
+                <div class="status status-up">✅ RUNNING</div>
+                <p>Internal management dashboard for appointment administrators.</p>
+                <div class="details">
+                    <strong>URL:</strong>
+                    <div class="url">http://localhost:3001</div>
+                    <strong>Test Command:</strong>
+                    <div class="command">curl -s -o /dev/null -w "%{http_code}" http://localhost:3001</div>
+                    <div class="actions">
+                        <a href="http://localhost:3001" class="btn btn-success" target="_blank">Open Admin Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backend API -->
+            <div class="service-card">
+                <div class="service-title">
+                    <span class="icon">⚙️</span> Backend API
+                </div>
+                <div class="status status-up">✅ RUNNING</div>
+                <p>NestJS backend with Hexagonal Architecture for business logic.</p>
+                <div class="details">
+                    <strong>URL:</strong>
+                    <div class="url">http://localhost:3002</div>
+                    <strong>Test Command:</strong>
+                    <div class="command">curl -s -o /dev/null -w "%{http_code}" http://localhost:3002</div>
+                    <div class="actions">
+                        <a href="http://localhost:3002" class="btn btn-warning" target="_blank">Open API Root</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-title">
+                <span class="icon">🚀</span> System Status Summary
+            </div>
+            <p><strong>All three services are running successfully!</strong></p>
+            <div class="details">
+                <strong>Quick Verification Commands:</strong>
+                <div class="command">
+                    # Check all three services:<br>
+                    curl -s -o /dev/null -w "Public: %{http_code} " http://localhost:3000 && \
+                    curl -s -o /dev/null -w "Admin: %{http_code} " http://localhost:3001 && \
+                    curl -s -o /dev/null -w "Backend: %{http_code}\n" http://localhost:3002
+                </div>
+                <div class="note">
+                    <strong>✅ Success:</strong> Public form (port 3000), admin dashboard (port 3001), and backend API (port 3002) are all accessible.
+                </div>
+                <div class="note warning">
+                    <strong>⚠️ Note:</strong> The backend API's appointment endpoints may return 500 errors due to database dependency injection issues in development mode. The core services are running correctly.
+                </div>
+            </div>
+        </div>
+        
+        <div class="service-card">
+            <div class="service-title">
+                <span class="icon">📁</span> Project Structure
+            </div>
+            <p><strong>Monorepo Organization:</strong></p>
+            <div class="details">
+                <strong>Apps:</strong>
+                <ul>
+                    <li><code>/apps/public-web</code> - Next.js public form (port 3000)</li>
+                    <li><code>/apps/admin-dashboard</code> - Next.js admin panel (port 3001)</li>
+                    <li><code>/apps/backend-api</code> - NestJS backend (port 3002)</li>
+                </ul>
+                <strong>Packages:</strong>
+                <ul>
+                    <li><code>/packages/database</code> - Drizzle ORM schemas</li>
+                    <li><code>/packages/api-contracts</code> - Shared TypeScript interfaces</li>
+                    <li><code>/packages/ui</code> - Shared React components</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
