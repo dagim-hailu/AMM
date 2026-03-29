@@ -1,43 +1,26 @@
-# Use Node.js 20 LTS as base image
 FROM node:20-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package.json and lock files
-COPY package.json ./
-RUN npm install
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npm install
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-# Build the Next.js application
-RUN npm run build
+# Ensure you build the admin-dashboard specifically
+RUN npm run build --filter=admin-dashboard
 
-# Production image, copy all the files and run next
-FROM base AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
-
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy built files
+COPY --from=base /app/apps/admin-dashboard/.next ./.next
+COPY --from=base /app/apps/admin-dashboard/package.json ./package.json
+COPY --from=base /app/apps/admin-dashboard/public ./public
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/apps/admin-dashboard/next.config.* ./
 
-# Copy necessary files from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
+# MATCH YOUR DOCKER-COMPOSE PORT
 EXPOSE 3001
-
-ENV PORT=3001
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

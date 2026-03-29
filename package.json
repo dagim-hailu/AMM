@@ -13,7 +13,9 @@
     "test": "turbo run test"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
     "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0",
     "turbo": "latest"
   },
   "packageManager": "npm@10.9.4"

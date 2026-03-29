@@ -1,43 +1,24 @@
-# Use Node.js 20 LTS as base image
 FROM node:20-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package.json and lock files
-COPY package.json ./
+# Copy everything for the monorepo context
+COPY . .
 RUN npm install
 
-# Rebuild the source code only when needed
-FROM base AS builder
+# Build only the public-web app
+RUN npm run build --filter=public-web
+
+FROM node:20-alpine AS runner
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Build the Next.js application
-RUN npm run build
-
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
-
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy necessary files from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+# Copy Next.js production files
+COPY --from=base /app/apps/public-web/.next ./.next
+COPY --from=base /app/apps/public-web/package.json ./package.json
+COPY --from=base /app/apps/public-web/public ./public
+COPY --from=base /app/node_modules ./node_modules
 
 EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+# The correct command for Next.js production
+CMD ["npm", "start"]

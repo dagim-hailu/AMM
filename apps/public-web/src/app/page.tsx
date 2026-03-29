@@ -78,7 +78,8 @@ export default function Home() {
       };
 
       // Include CAPTCHA token in the request
-      const res = await fetch("http://localhost:3002/appointments", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://196.189.237.3:8080/api";
+      const res = await fetch(`${apiUrl}/appointments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

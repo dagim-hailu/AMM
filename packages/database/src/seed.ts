@@ -1,253 +1,77 @@
-import { db, appointments } from './index';
-import { AppointmentState } from '../../../apps/backend-api/src/domain/entities/appointment.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+import * as schema from './schema';
+import { faker } from '@faker-js/faker';
 
-async function seed() {
-  console.log('🌱 Seeding database...');
+async function main() {
+  const pool = new Pool({
+    connectionString: "postgresql://postgres:password@localhost:5433/amm_db",
+  });
+  const db = drizzle(pool, { schema });
 
-  const mockAppointments = [
-    {
-      id: uuidv4(),
-      requestorName: 'Ahmed Hassan',
-      organization: 'AgriCorp',
-      country: 'Egypt',
-      city: 'Cairo',
-      issueDescription: 'Need consultation on soil irrigation systems.',
-      mobile: '+201234567890',
-      email: 'ahmed@agricorp.com',
-      suggestedTime: new Date('2026-04-10T09:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Sarah Miller',
-      organization: 'GreenTech Solutions',
-      country: 'USA',
-      city: 'San Francisco',
-      issueDescription: 'Interest in vertical farming equipment.',
-      mobile: '+15550123456',
-      email: 'sarah@greentech.io',
-      suggestedTime: new Date('2026-04-12T14:30:00Z'),
-      state: AppointmentState.CONFIRMED,
-      confirmedTime: new Date('2026-04-12T15:00:00Z'),
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Li Wei',
-      organization: 'Pacific Exports',
-      country: 'China',
-      city: 'Shanghai',
-      issueDescription: 'Export licensing for grain shipments.',
-      mobile: '+8613800000000',
-      email: 'li.wei@pacific.cn',
-      suggestedTime: new Date('2026-04-15T10:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'John Doe',
-      organization: 'Farmers United',
-      country: 'Canada',
-      city: 'Toronto',
-      issueDescription: 'Grant application for organic farming.',
-      mobile: '+14165551234',
-      email: 'john.doe@farmers.ca',
-      suggestedTime: new Date('2026-04-20T11:00:00Z'),
-      state: AppointmentState.CANCELLED,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Maria Garcia',
-      organization: 'AgroSur',
-      country: 'Spain',
-      city: 'Madrid',
-      issueDescription: 'Sustainable pesticide usage guidelines.',
-      mobile: '+34600123456',
-      email: 'm.garcia@agrosur.es',
-      suggestedTime: new Date('2026-04-22T13:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'David Smith',
-      organization: 'Smith & Sons',
-      country: 'UK',
-      city: 'London',
-      issueDescription: 'Livestock health certification.',
-      mobile: '+442079460000',
-      email: 'david@smithandsons.co.uk',
-      suggestedTime: new Date('2026-04-25T09:30:00Z'),
-      state: AppointmentState.CONFIRMED,
-      confirmedTime: new Date('2026-04-25T10:00:00Z'),
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Elena Petrova',
-      organization: 'AgroRussia',
-      country: 'Russia',
-      city: 'Moscow',
-      issueDescription: 'Import duties for agricultural machinery.',
-      mobile: '+74951234567',
-      email: 'e.petrova@agrorussia.ru',
-      suggestedTime: new Date('2026-04-28T15:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Hiroshi Tanaka',
-      organization: 'Nippon Agri',
-      country: 'Japan',
-      city: 'Tokyo',
-      issueDescription: 'Collaboration on rice breeding technology.',
-      mobile: '+81312345678',
-      email: 'tanaka@nipponagri.jp',
-      suggestedTime: new Date('2026-05-02T10:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Sofia Rossi',
-      organization: 'Veneto Vineyards',
-      country: 'Italy',
-      city: 'Venice',
-      issueDescription: 'Vineyard renewal subsidy.',
-      mobile: '+390411234567',
-      email: 's.rossi@venetovine.it',
-      suggestedTime: new Date('2026-05-05T11:00:00Z'),
-      state: AppointmentState.COMPLETED,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Fatima Al-Sayed',
-      organization: 'Gulf Agri Group',
-      country: 'UAE',
-      city: 'Dubai',
-      issueDescription: 'Hydroponic system installation support.',
-      mobile: '+97141234567',
-      email: 'fatima@gulfagri.ae',
-      suggestedTime: new Date('2026-05-08T09:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Michael Brown',
-      organization: 'Brown Farms',
-      country: 'Australia',
-      city: 'Melbourne',
-      issueDescription: 'Water rights allocation.',
-      mobile: '+61390000000',
-      email: 'm.brown@brownfarms.com.au',
-      suggestedTime: new Date('2026-05-12T14:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Anna Schmidt',
-      organization: 'Bavarian Harvest',
-      country: 'Germany',
-      city: 'Munich',
-      issueDescription: 'EU agricultural policy updates.',
-      mobile: '+49891234567',
-      email: 'a.schmidt@bavarianharvest.de',
-      suggestedTime: new Date('2026-05-15T10:30:00Z'),
-      state: AppointmentState.CONFIRMED,
-      confirmedTime: new Date('2026-05-15T11:00:00Z'),
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Carlos Silva',
-      organization: 'Brasil Agro',
-      country: 'Brazil',
-      city: 'Sao Paulo',
-      issueDescription: 'Sugar cane export regulations.',
-      mobile: '+5511987654321',
-      email: 'carlos@brasilagro.com.br',
-      suggestedTime: new Date('2026-05-18T13:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Yuki Morita',
-      organization: 'Kyoto Tea Co.',
-      country: 'Japan',
-      city: 'Kyoto',
-      issueDescription: 'Organic certification for tea exports.',
-      mobile: '+81751234567',
-      email: 'y.morita@kyototea.jp',
-      suggestedTime: new Date('2026-05-22T10:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Peter van der Meer',
-      organization: 'Dutch Blooms',
-      country: 'Netherlands',
-      city: 'Amsterdam',
-      issueDescription: 'Flower auction logistics.',
-      mobile: '+31201234567',
-      email: 'peter@dutchblooms.nl',
-      suggestedTime: new Date('2026-05-25T15:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Jean Dupont',
-      organization: 'Vignes de France',
-      country: 'France',
-      city: 'Bordeaux',
-      issueDescription: 'Wine export taxes.',
-      mobile: '+33556123456',
-      email: 'j.dupont@vignes.fr',
-      suggestedTime: new Date('2026-05-28T11:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Sunita Kumar',
-      organization: 'Indo-Agro',
-      country: 'India',
-      city: 'Mumbai',
-      issueDescription: 'Spice trade quality standards.',
-      mobile: '+912212345678',
-      email: 's.kumar@indoagro.in',
-      suggestedTime: new Date('2026-06-02T10:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Omar Farooq',
-      organization: 'Punjab Harvest',
-      country: 'Pakistan',
-      city: 'Lahore',
-      issueDescription: 'Fertilizer subsidy query.',
-      mobile: '+92421234567',
-      email: 'omar@punjabharvest.pk',
-      suggestedTime: new Date('2026-06-05T09:00:00Z'),
-      state: AppointmentState.PENDING,
-    },
-    {
-      id: uuidv4(),
-      requestorName: 'Grace Mbeki',
-      organization: 'Cape Coast Produce',
-      country: 'South Africa',
-      city: 'Cape Town',
-      issueDescription: 'Citrus export markets.',
-      mobile: '+27211234567',
-      email: 'grace@capeproduce.co.za',
-      suggestedTime: new Date('2026-06-10T14:30:00Z'),
-      state: AppointmentState.PENDING,
-    },
-  ];
+  console.log('🚀 Starting Full Demo Seed...');
 
-  for (const appointment of mockAppointments) {
-    await db.insert(appointments).values(appointment as any);
+  // 1. CLEAR OLD DATA
+  await db.delete(schema.auditLogs);
+  await db.delete(schema.appointments);
+  await db.delete(schema.businessHours);
+  await db.delete(schema.holidays);
+
+  // 2. SEED APPOINTMENTS
+  console.log('⏳ Generating 29 Appointments...');
+  const allMockAppointments = Array.from({ length: 29 }).map(() => ({
+    requestorName: faker.person.fullName().substring(0, 255),
+    organization: faker.company.name().substring(0, 255),
+    country: 'Ethiopia',
+    city: faker.location.city().substring(0, 100),
+    issueDescription: faker.lorem.sentence(),
+    // Fixed function name to match latest Faker JS
+    mobile: faker.helpers.replaceSymbols('+251 9## ### ###'),
+    email: faker.internet.email().substring(0, 255),
+    suggestedTime: faker.date.future(),
+    state: faker.helpers.arrayElement(['PENDING', 'CONFIRMED', 'COMPLETED']),
+  }));
+
+  const insertedApps = [];
+  for (let i = 0; i < allMockAppointments.length; i += 5) {
+    const chunk = allMockAppointments.slice(i, i + 5);
+    const result = await db.insert(schema.appointments).values(chunk).returning();
+    insertedApps.push(...result);
   }
+  console.log(`✅ ${insertedApps.length} Appointments created.`);
 
-  console.log('✅ Seeded 19 appointments successfully.');
-  process.exit(0);
+  // 3. SEED AUDIT LOGS
+  const mockLogs = insertedApps.map((app) => ({
+    appointmentId: app.id,
+    userId: 'admin-seed',
+    previousState: 'INITIAL',
+    newState: app.state,
+    actionDetails: { note: "Seeded" },
+  }));
+  await db.insert(schema.auditLogs).values(mockLogs);
+  console.log('✅ Audit Logs linked.');
+
+  // 4. SEED BUSINESS HOURS (Mon-Fri)
+  const workingDays = [1, 2, 3, 4, 5];
+  const hours = workingDays.map((day) => ({
+    id: day,
+    dayOfWeek: day as any,
+    startTime: '08:30:00',
+    endTime: '17:30:00',
+  }));
+  await db.insert(schema.businessHours).values(hours);
+  console.log('✅ Business Hours set.');
+
+  // 5. SEED HOLIDAYS
+  const holidays = [
+    { date: '2026-04-12', description: 'Easter (Fasika)' },
+    { date: '2026-05-01', description: 'Labour Day' },
+  ];
+  await db.insert(schema.holidays).values(holidays);
+  console.log('✅ Ethiopian Holidays added.');
+
+  console.log('✨ SEEDING COMPLETE! Visit http://196.189.237.3 to see the data.');
+  await pool.end();
 }
 
-seed().catch((err) => {
-  console.error('❌ Seeding failed:', err);
-  process.exit(1);
-});
+main().catch(console.error);

@@ -135,7 +135,8 @@ export default function AdminDashboard() {
         }
       }
 
-      const url = `http://localhost:3002/appointments?${params.toString()}`;
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://196.189.237.3:8080/api";
+      const url = `${apiUrl}/appointments?${params.toString()}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch");
       const result = await res.json();
@@ -157,7 +158,8 @@ export default function AdminDashboard() {
 
   const confirmAppointment = async (id: string, time?: string) => {
     try {
-      const res = await fetch(`http://localhost:3002/appointments/${id}/confirm`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://196.189.237.3:8080/api";
+      const res = await fetch(`${apiUrl}/appointments/${id}/confirm`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ newTime: time || new Date().toISOString() }),
@@ -172,7 +174,8 @@ export default function AdminDashboard() {
   const rescheduleAppointment = async () => {
     if (!editingApt || !newTime) return;
     try {
-      const res = await fetch(`http://localhost:3002/appointments/${editingApt.id}/reschedule`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://196.189.237.3:8080/api";
+      const res = await fetch(`${apiUrl}/appointments/${editingApt.id}/reschedule`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
