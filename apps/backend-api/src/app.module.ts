@@ -10,9 +10,10 @@ import { DrizzleAppointmentRepository } from './infrastructure/database/drizzle-
 import { RedisEventPublisher } from './infrastructure/events/redis-event.publisher';
 import { IAppointmentRepository } from './domain/ports/appointment.repository';
 import { IEventPublisher } from './domain/ports/event.publisher';
+import { AuthModule } from '@amm/auth';
 
 @Module({
-  imports: [],
+  imports: [AuthModule],
   controllers: [AppController, AppointmentsController],
   providers: [
     AppService,

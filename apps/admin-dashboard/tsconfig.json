@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@amm/*": ["../../packages/*/index.ts", "../../packages/*/src/index.ts"]
     }
   },
   "include": [
